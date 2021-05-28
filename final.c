@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <string.h>
+#include "list.h"
 
 int main(int arg,char *argv[]){
 	int **arr;	
@@ -12,8 +13,8 @@ int main(int arg,char *argv[]){
 	int m=0,n=0;//row & col
 	int p=0,q=0;//row & col
 	int k=0;
+	int repeat=0;
 	int selectnum, runnum;//selcectnum for run
-	
 	
 	
 	//input.matrix로 파일 열기
@@ -90,23 +91,31 @@ int main(int arg,char *argv[]){
 	while(1){
 		printf("동작수행선택 --> (1)프로그램종료 (2)순차처리 (3)Process 병렬처리 (4)스레드 병렬처리\n");
 		scanf("%d",&selectnum);
-
+		
 		if(selectnum == 1){
 			fclose(fp);
 			exit(0);
 		}
 		
-		else if(selectnum == 2){
-			printf("순차처리 시작\n");	
+		printf("세대 수 입력: ");
+		scanf("%d", &repeat);
+
+		//최종 파일과 중간 파일은 각 분할된 소스파일내에서 하자
+		if(selectnum == 2){
+			printf("순차처리 시작\n");
+			//총 수행시간 ms단위로 출력
+			seqt(arr,repeat,m,n);
 		}
 
 		else if(selectnum == 3){
 			printf("Child Process의 개수: ");
 			scanf("%d",&runnum);
+			//프로세서들의 id들을 모두 출력& 총 수행시간 ms단위로 출력
 		}
 		else if(selectnum == 4){
 			printf("Thread의 개수: ");
 			scanf("%d",&runnum);
+			//스레드들의 id들을 모두 출력& 총 수행시간 ms단위로 출력
 		}
 	}
 
