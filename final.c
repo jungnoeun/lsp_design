@@ -26,7 +26,8 @@ int main(int arg,char *argv[]){
 	//파일의 사이즈 구하기
 	fseek(fp,0,SEEK_END);
 	size = ftell(fp);
-	rearr = malloc(size+1);
+	//rearr = malloc(size+1);
+	rearr = (int*)malloc(sizeof(int)*(size+1));
 	memset(rearr,0,size+1);
 
 	fseek(fp,0,SEEK_SET);
@@ -34,13 +35,15 @@ int main(int arg,char *argv[]){
 	//실제 size의 2배값이 나옴 => ' '을 포함해서
 	printf("size = %d\n",size);
 
-	while((ch = fgetc(fp))!=EOF){
+	while((ch = fgetc(fp)) != EOF){
+		//printf("%d ",ch);
 		rearr[k++] = ch;
 		if(ch == '\n')
 			m++;
 	}
 	printf("k = %d\n",k);
 
+	
 	//행  구하기 성공
 	printf("m = %d\n",m);
 
