@@ -97,7 +97,7 @@ int main(int arg,char *argv[]){
 		}
 		
 		else if(selectnum == 2){
-		
+			printf("순차처리 시작\n");	
 		}
 
 		else if(selectnum == 3){
