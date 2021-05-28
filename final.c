@@ -81,69 +81,14 @@ int main(int arg,char *argv[]){
 	}
 
 
-
-
-	//-------------------------------------------------------------------------------------------------------
-	//이 밑으로는 실패작들
-	//행m과 열n의 값 구하기
-	
-	/*while((ch = fgetc(fp))!=EOF){
-		//printf("%d ",ch-'0');
-		if(ch == 48 || ch == 49){
-			m++;
-		}
-		else if(ch == '\n')
-			n++;
-	}
-	printf("\n행과 열 (처음): %d %d\n",m,n);
-	m/=n;
-
-	arr = (int**)malloc(sizeof(int*)*m);
-	for(int i=0;i<m;i++){
-		arr[i] = (int*)malloc(sizeof(int)*n);
-	}
-	printf("동적할당 후 행과 열(전): %d %d\n",m,n);
-
-	//rewind(fp);
-	//fclose(fp);
-	printf("file fseek before?\n");
-	//fseek(fp,0L,SEEK_SET);
-	printf("file fseek after\n");
-	
-	fp2 = freopen(fname,"r",fp);
-
-	printf("재 오픈 후 파일의 값: ");
-	//배열에 매트릭스 값 넣기
-	while((ch = fgetc(fp2))!=EOF){
-		printf("%d ",ch);
-		if(ch == '\n')
-			q++;
-		if(ch == 48||ch == 49)
-			arr[p++][q] = ch - '0';
-		else if(ch == ' ')
-			continue;
-	}
-	*/
-
-	//printf("행과 열: %d %d\n",p,q);
 	
 	//------------------------------------------------------------------------------------------------------------------
 	
-	
-	//구현 완료
-	/*printf("동작수행선택--> (1)프로그램종료 (2)순차처리 (3)Process 병렬처리 (4)스레드 병렬처리\n");
-	scanf("%d",&selectnum);
 
 	
 
-	if(selectnum == 1){
-		fclose(fp);
-		exit(0);
-	}
-
-	//if(selectnum == 2)
-	while(selectnum != 1){
-		printf("동작수행선택 --> (1)프로그램종료 (순차처리) (3)Process 병렬처리 (4)스레드 병렬처리\n");
+	while(1){
+		printf("동작수행선택 --> (1)프로그램종료 (2)순차처리 (3)Process 병렬처리 (4)스레드 병렬처리\n");
 		scanf("%d",&selectnum);
 
 		if(selectnum == 1){
@@ -151,7 +96,9 @@ int main(int arg,char *argv[]){
 			exit(0);
 		}
 		
-		//else if(selectnum == 2)
+		else if(selectnum == 2){
+		
+		}
 
 		else if(selectnum == 3){
 			printf("Child Process의 개수: ");
@@ -161,7 +108,7 @@ int main(int arg,char *argv[]){
 			printf("Thread의 개수: ");
 			scanf("%d",&runnum);
 		}
-	}*/
+	}
 
 
 
