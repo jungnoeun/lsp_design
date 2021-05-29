@@ -1,12 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 int neighborNum(int **arr,int i,int j,int m,int n);
 
 void seqt(int **arr,int repeat,int m,int n){
 	FILE *sfp;
 	int neighbor =0;//이웃세포의 수
+	int seqn =1;//파일의 이름에 들어갈 순서
+	char head[20] = "gen_";
+	char seqarr[20];
+	char extra[20];
+	char buffer;
+
+	strcpy(extra,head);
 
 	int **sarr = (int**)malloc(sizeof(int*)*m);
 	for(int i=0;i<m;i++){
@@ -42,7 +50,39 @@ void seqt(int **arr,int repeat,int m,int n){
 				arr[i][j] = sarr[i][j];
 			}
 		}
+	
+		//중간파일 이름 생성
+		sprintf(seqarr,"%d",seqn);
+		strcat(head,seqarr);
+		//printf("%s\n",head);
+		seqn++;
+		strcpy(head,extra);
 
+		//중간파일 생성
+		/*sfp = fopen(head,"w");
+		if(sfp == NULL){
+			fprintf(stderr,"fopen error for %s\n",head);
+			exit(1);
+		}
+
+		//파일에 매트릭스 쓰기
+		for(int i=0;i<m;i++){
+			for(int j=0;j<n;j++){
+				fwrite(&(arr[i][j]),sizeof(int),1,sfp);
+				fwrite(" ",sizeof(char),1,sfp);
+			}
+			fwrite("\n",sizeof(char),1,sfp);
+		}
+
+		fseek(sfp,0,SEEK_SET);
+		while(1){
+			buffer = fgetc(sfp);
+			if(buffer==EOF)
+				break;
+			putchar(buffer);
+		}
+
+		fclose(sfp);*/
 
 
 	}
