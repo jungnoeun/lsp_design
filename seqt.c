@@ -9,10 +9,11 @@ void seqt(int **arr,int repeat,int m,int n){
 	FILE *sfp;
 	int neighbor =0;//이웃세포의 수
 	int seqn =1;//파일의 이름에 들어갈 순서
-	char head[20] = "gen_";
+	char head[30] = "gen_";
 	char seqarr[20];
 	char extra[20];
-	char buffer;
+	char tail[10] = ".matrix";
+	char buff[10];
 
 	strcpy(extra,head);
 
@@ -52,37 +53,32 @@ void seqt(int **arr,int repeat,int m,int n){
 		}
 	
 		//중간파일 이름 생성
+		strcpy(head,extra);
 		sprintf(seqarr,"%d",seqn);
 		strcat(head,seqarr);
+		strcat(head,tail);
 		//printf("%s\n",head);
 		seqn++;
-		strcpy(head,extra);
+		//strcpy(head,extra);
 
 		//중간파일 생성
-		/*sfp = fopen(head,"w");
+		sfp = fopen(head,"w+");
 		if(sfp == NULL){
 			fprintf(stderr,"fopen error for %s\n",head);
 			exit(1);
 		}
 
-		//파일에 매트릭스 쓰기
+		//파일에 매트릭스 받아쓰기
 		for(int i=0;i<m;i++){
 			for(int j=0;j<n;j++){
-				fwrite(&(arr[i][j]),sizeof(int),1,sfp);
-				fwrite(" ",sizeof(char),1,sfp);
+				fprintf(sfp,"%d",arr[i][j]);
+				fprintf(sfp," ");
 			}
-			fwrite("\n",sizeof(char),1,sfp);
+			fprintf(sfp,"\n");
 		}
 
-		fseek(sfp,0,SEEK_SET);
-		while(1){
-			buffer = fgetc(sfp);
-			if(buffer==EOF)
-				break;
-			putchar(buffer);
-		}
 
-		fclose(sfp);*/
+		fclose(sfp);
 
 
 	}
