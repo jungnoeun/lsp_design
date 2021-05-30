@@ -14,6 +14,8 @@ void seqt(int **arr,int repeat,int m,int n){
 	char extra[20];
 	char tail[10] = ".matrix";
 	char buff[10];
+	char resf[20] = "output.matrix";
+	FILE *rfp;
 
 	strcpy(extra,head);
 
@@ -77,12 +79,30 @@ void seqt(int **arr,int repeat,int m,int n){
 			fprintf(sfp,"\n");
 		}
 
-
 		fclose(sfp);
 
 
 	}
-	
+
+	//output 파일 생성
+	rfp = fopen(resf,"w+");
+	if(rfp == NULL){
+		fprintf(stderr,"fopen error for %s\n",resf);
+		exit(1);
+	}
+
+	//output 파일 내용 작성
+	for(int i=0;i<m;i++){
+		for(int j=0;j<n;j++){
+			fprintf(rfp,"%d",arr[i][j]);
+			fprintf(rfp," ");
+		}
+		fprintf(rfp,"\n");
+	}
+
+	fclose(rfp);
+
+
 	
 	return;
 }
