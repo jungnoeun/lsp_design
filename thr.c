@@ -71,7 +71,7 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 			farr[i][j] = arr[i][j];
 		}
 		
-	for(int j=0;j<repeat;j++){
+	for(int j=1;j<=repeat;j++){
 
 		seqn = j;
 		//if(end == 3)
@@ -182,6 +182,9 @@ void *paral(void *arg){
 			pthread_cond_signal(&cond);
 		pthread_cond_wait(&cond,&mutex);
 
+		if(it>=mm)
+			break;
+
 		arn++;
 			
 
@@ -190,6 +193,7 @@ void *paral(void *arg){
 
 		for(int i=0;i<nn;i++)
 			farr[it][i] = sarr[it][i];
+		it++;//위치 바꾼 후
 		pthread_mutex_unlock(&mutex);
 		printf("%u 스레드 실행\n",(unsigned int)pid);
 
@@ -199,13 +203,16 @@ void *paral(void *arg){
 			//	pthread_cond_signal(&cond2);
 				//call_sig();
 			//}
-		it++;
+		//it++; //위치 바꾸기 전
 		if(it<mm)
 			pthread_cond_signal(&cond);
+		else
+			pthread_cond_broadcast(&cond);
 		
 	}
 
 
+	
 	for(int i=0;i<runn;i++){
 		pthread_join(tid[i],NULL);
 		printf("스레드 반납 %d\n",i);
@@ -213,7 +220,7 @@ void *paral(void *arg){
 
 
 		//total--;
-		//farr에 임시저장한 내용을 rarr에 넣어줌
+	//farr에 임시저장한 내용을 rarr에 넣어줌
 	for(int i=0;i<mm;i++)
 		for(int j=0;j<nn;j++)
 			rarr[i][j] = farr[i][j];
