@@ -21,9 +21,12 @@ int runn;
 int seqn;
 int end = 3;
 
-pthread_mutex_t mutex= PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t cond= PTHREAD_COND_INITIALIZER;
-pthread_cond_t cond2 = PTHREAD_COND_INITIALIZER;
+//pthread_mutex_t mutex= PTHREAD_MUTEX_INITIALIZER;
+//pthread_cond_t cond= PTHREAD_COND_INITIALIZER;
+//pthread_cond_t cond2 = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t mutex;
+pthread_cond_t cond;
+
 pthread_t tid[10000];
 
 void call_sig(){
@@ -51,11 +54,7 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 	
 	total = repeat;//세대 진행을 할 총 수행 횟수
 	int status;
-	//int num_threads = runnum;
-	//pthread_t tid[num_threads];
 	
-	//이거 지웠음!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	//pthread_t tid[10000];
 	int *id = (int*)malloc(sizeof(int)*runnum);
 
 	//세대 진행시 임시저장할 이차원 배열
@@ -80,11 +79,24 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 			farr[i][j] = arr[i][j];
 		}
 		
-	for(int k=1;k<=repeat;k++){
+	//repeat번 실행
+	for(int k=1;k<=repeat;k++)
+	{
+		//mutex = PTHREAD_MUTEX_INITIALIZER;
+		//cond = PTHREAD_COND_INITIALIZER;
+
+		pthread_mutex_init(&mutex,NULL);
+		pthread_cond_init(&cond,NULL);
+		printf("스레드 생성 전 %d번째\n",k);
+		for(int i=0;i<m;i++){
+			for(int j=0;j<n;j++)
+				printf("%d ",rarr[i][j]);
+			printf("\n");
+		}
 
 		seqn = k;
 		it =0;
-			//runnum개의 스레드 생성
+		//runnum개의 스레드 생성
 		printf("스레드 생성\n");
 		for(int i=0;i<runnum;i++)
 		{
@@ -130,15 +142,16 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 
 		fclose(fp);
 
-		//스레드 반납
-		/*printf("스레드 반납 시작\n");
 
-		for(int i=0;i<runnum;i++){
-			pthread_join(tid[i],(void*)&status);
-			printf("스레드 %d 반납완료\n",i);
-			//pthread_cond_signal(&cond);
-		}*/
+		printf("스레드 생성 후 %d번째\n",k);
+		for(int i=0;i<m;i++){
+			for(int j=0;j<n;j++)
+				printf("%d ",rarr[i][j]);
+			printf("\n");
+		}
+
 	}
+
 
 	//rarr의 내용을 arr에 넣어줌
 	for(int i=0;i<m;i++)
@@ -175,20 +188,7 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 
 
 void *paral(void *arg){
-	//FILE *fp;
-	//FILE *rfp;
-	//int neighbor =0;
-
-	//파일 이름 생성
-	//int seqn = *((int*)arg);
 	
-	/*char head[30] = "gen_";
-	char extra[20];
-	char tail[10] = ".matrix";
-	char buff[10];*/
-
-	//char resf[20] = "output.matrix";
-	//char seqarr[20];
 	int st;
 
 	pthread_t pid;
@@ -200,23 +200,16 @@ void *paral(void *arg){
 		printf("tid[%d] = %u\n",i,(unsigned int)tid[i]);
 	}
 	
-	//strcpy(extra,head);
-
-	
-	//pthread_mutex_lock(&mutex);
 	
 	printf("im in paral\n");
 
-	//스레드 행동 시작
-	//while(total)
-	//{
-	//it = 0;
 
-	printf("total : %d\n",total);
-
+	printf("it = %d\n",it);
 	//it이라는 변수를 여러개의 스레드가 독립적으로 접근
 	pthread_mutex_lock(&mutex);
-
+	printf("lock %d\n",seqn);
+	if(it>=mm)
+		pthread_cond_broadcast(&cond);
 	//행 단위로 실행
 	while(it<mm)
 	{
@@ -241,12 +234,6 @@ void *paral(void *arg){
 		printf("%u 스레드 실행\n",(unsigned int)pid);
 
 
-			//pthread_cond_wait(&cond2,&mutex);
-			//if((arn%runn)==0&&it<mm){
-			//	pthread_cond_signal(&cond2);
-				//call_sig();
-			//}
-		//it++; //위치 바꾸기 전
 		if(it<mm)
 			pthread_cond_signal(&cond);
 		else
@@ -261,41 +248,6 @@ void *paral(void *arg){
 		printf("스레드 반납 %d\n",i);
 	}
 
-
-		//total--;
-	//farr에 임시저장한 내용을 rarr에 넣어줌
-	/*for(int i=0;i<mm;i++)
-		for(int j=0;j<nn;j++)
-			rarr[i][j] = farr[i][j];
-		
-		
-		
-	//중간파일 이름 생성
-	strcpy(head,extra);
-	sprintf(seqarr,"%d",seqn);
-	strcat(head,seqarr);
-	strcat(head,tail);
-	seqn++;
-
-	//중간파일 생성
-	fp = fopen(head,"w+");
-	if(fp = NULL)
-	{
-		fprintf(stderr,"fopen error for %s\n",head);
-		exit(1);
-	}
-
-	//중간 파일 내용 작성
-	for(int i=0;i<mm;i++)
-	{
-		for(int j=0;j<nn;j++){
-			fprintf(fp,"%d",rarr[i][j]);
-			fprintf(fp," ");
-		}
-		fprintf(fp,"\n");
-	}
-
-	fclose(fp);*/
 
 
 
