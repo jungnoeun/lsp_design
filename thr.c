@@ -34,6 +34,15 @@ void call_sig(){
 
 void mkthr(int **arr,int repeat,int m, int n,int runnum)
 {
+	FILE *fp;
+	char head[30] = "gen_";
+	char extra[20];
+	char tail[10] = ".matrix";
+	char buff;
+	char seqarr[20];
+	
+	strcpy(extra,head);
+
 	FILE *rfp;
 	char resf[20] = "output.matrix";
 	mm = m;
@@ -71,16 +80,16 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 			farr[i][j] = arr[i][j];
 		}
 		
-	for(int j=1;j<=repeat;j++){
+	for(int k=1;k<=repeat;k++){
 
-		seqn = j;
-		//if(end == 3)
-		//{
+		seqn = k;
+		it =0;
 			//runnum개의 스레드 생성
 		printf("스레드 생성\n");
 		for(int i=0;i<runnum;i++)
 		{
 			id[i] = i;
+			
 			if(pthread_create(&tid[i],NULL,paral,NULL) != 0){
 					fprintf(stderr,"pthread_creat error\n");
 					exit(1);
@@ -88,6 +97,38 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 		}
 		//}
 		sleep(3);
+
+
+		for(int i =0;i<m;i++)
+			for(int j=0;j<n;j++)
+				rarr[i][j] = farr[i][j];
+
+		//중간 파일 이름 생성
+		strcpy(head,extra);
+		sprintf(seqarr,"%d",seqn);
+		strcat(head,seqarr);
+		strcat(head,tail);
+		
+		//중간 파일 생성
+		fp = fopen(head,"w+");
+		if(fp == NULL)
+		{
+			fprintf(stderr,"fopen error for %s\n",head);
+			exit(1);
+		}
+
+		//중간 파일 내용 작성
+		for(int i=0;i<m;i++)
+		{
+			for(int j=0;j<n;j++)
+			{
+				fprintf(fp,"%d",rarr[i][j]);
+				fprintf(fp," ");
+			}
+			fprintf(fp,"\n");
+		}
+
+		fclose(fp);
 
 		//스레드 반납
 		/*printf("스레드 반납 시작\n");
@@ -134,18 +175,20 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 
 
 void *paral(void *arg){
-	FILE *fp;
+	//FILE *fp;
 	//FILE *rfp;
-	int neighbor =0;
+	//int neighbor =0;
 
 	//파일 이름 생성
 	//int seqn = *((int*)arg);
-	char head[30] = "gen_";
+	
+	/*char head[30] = "gen_";
 	char extra[20];
 	char tail[10] = ".matrix";
-	char buff[10];
+	char buff[10];*/
+
 	//char resf[20] = "output.matrix";
-	char seqarr[20];
+	//char seqarr[20];
 	int st;
 
 	pthread_t pid;
@@ -157,7 +200,7 @@ void *paral(void *arg){
 		printf("tid[%d] = %u\n",i,(unsigned int)tid[i]);
 	}
 	
-	strcpy(extra,head);
+	//strcpy(extra,head);
 
 	
 	//pthread_mutex_lock(&mutex);
@@ -167,7 +210,7 @@ void *paral(void *arg){
 	//스레드 행동 시작
 	//while(total)
 	//{
-	it = 0;
+	//it = 0;
 
 	printf("total : %d\n",total);
 
@@ -221,7 +264,7 @@ void *paral(void *arg){
 
 		//total--;
 	//farr에 임시저장한 내용을 rarr에 넣어줌
-	for(int i=0;i<mm;i++)
+	/*for(int i=0;i<mm;i++)
 		for(int j=0;j<nn;j++)
 			rarr[i][j] = farr[i][j];
 		
@@ -252,7 +295,7 @@ void *paral(void *arg){
 		fprintf(fp,"\n");
 	}
 
-	fclose(fp);
+	fclose(fp);*/
 
 
 
