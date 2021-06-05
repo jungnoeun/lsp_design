@@ -16,7 +16,7 @@ int main(int arg,char *argv[]){
 	int k=0;
 	int repeat=0;
 	int selectnum, runnum;//selcectnum for run
-	int *pid;//for id by return
+	//int *pid;//for id by return
 	
 	clock_t start,finish;
 	double duration;
@@ -105,19 +105,14 @@ int main(int arg,char *argv[]){
 			printf("Child Process의 개수: ");
 			scanf("%d",&runnum);
 			//프로세서들의 id들을 모두 출력& 총 수행시간 ms단위로 출력
-			pid = (int*)malloc(sizeof(int)*runnum);
-			pid = child(arr,repeat,m,n,runnum);
+			//pid = (int*)malloc(sizeof(int)*runnum);
+			child(arr,repeat,m,n,runnum);
 
 		}
 		else if(selectnum == 4){
 			printf("Thread의 개수: ");
 			scanf("%d",&runnum);
 
-			//result = (unsigned int**)malloc(sizeof(unsigned int*)*repeat);
-			//for(int i=0;i<repeat;i++)
-			//	result[i] = (unsigned int*)malloc(sizeof(unsigned int)*runnum);
-
-			//result = mkthr(arr,repeat,m,n,runnum);
 			//스레드들의 id들을 모두 출력& 총 수행시간 ms단위로 출력
 			mkthr(arr,repeat,m,n,runnum);
 			finish = clock();

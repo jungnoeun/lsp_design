@@ -109,9 +109,10 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 		sleep(3);
 
 		//tid[i] 입력
+		printf("%d 세대 스레드들 실행 완료\n",k);
 		for(int i=0;i<runnum;i++){
 			resultarr[k-1][i] = (unsigned int)tid[i];
-			//printf("tid [%d][%d] = %u\n",k-1,i,resultarr[k-1][i]);
+			printf("tid [%d][%d] = %u\n",k-1,i,resultarr[k-1][i]);
 		}
 
 
@@ -183,10 +184,27 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 	//스레드 id 출력
 	for(int i=0;i<repeat;i++){
 		for(int j=0;j<runnum;j++){
-			printf("%d세대  %d번째 스레드 =  %u\n",i,j,resultarr[i][j]);
+			printf("%d세대  %d번째 스레드 =  %u\n",i+1,j,resultarr[i][j]);
 		}
 	}
 
+	for(int i=0;i<repeat;i++){
+		free(resultarr[i]);
+	}
+	free(resultarr);
+
+	for(int i=0;i<m;i++){
+		free(rarr[i]);
+	}
+	free(rarr);
+	for(int i=0;i<m;i++){
+		free(sarr[i]);
+	}
+	free(sarr);
+	for(int i=0;i<m;i++){
+		free(farr[i]);
+	}
+	free(farr);
 
 	//printf("리턴시작\n");
 	return;
