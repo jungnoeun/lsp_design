@@ -4,7 +4,7 @@
 //#include <fcntl.c>
 #include <string.h>
 #include <pthread.h>
-
+#include <time.h>
 
 int total;
 int it =0;
@@ -20,10 +20,9 @@ void call_sig();
 int runn;
 int seqn;
 int end = 3;
+static unsigned int **resultarr;
 
-//pthread_mutex_t mutex= PTHREAD_MUTEX_INITIALIZER;
-//pthread_cond_t cond= PTHREAD_COND_INITIALIZER;
-//pthread_cond_t cond2 = PTHREAD_COND_INITIALIZER;
+
 pthread_mutex_t mutex;
 pthread_cond_t cond;
 
@@ -31,7 +30,6 @@ pthread_t tid[10000];
 
 void call_sig(){
 	sleep(1);
-	//pthread_cond_broadcast(&cond);
 	pthread_cond_signal(&cond);
 }
 
@@ -44,6 +42,14 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 	char buff;
 	char seqarr[20];
 	
+
+	resultarr = (unsigned int**)malloc(sizeof(unsigned int*)*repeat);
+	for(int i=0;i<repeat;i++)
+		resultarr[i] = (unsigned int*)malloc(sizeof(unsigned int)*runnum);
+	for(int i=0;i<repeat;i++)
+		for(int j=0;j<runnum;j++)
+			resultarr[i][j] = -1;
+
 	strcpy(extra,head);
 
 	FILE *rfp;
@@ -76,28 +82,20 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 	for(int i=0;i<m;i++)
 		for(int j=0;j<n;j++){
 			rarr[i][j] = arr[i][j];
-			farr[i][j] = arr[i][j];
 		}
 		
 	//repeat번 실행
 	for(int k=1;k<=repeat;k++)
 	{
-		//mutex = PTHREAD_MUTEX_INITIALIZER;
-		//cond = PTHREAD_COND_INITIALIZER;
 
 		pthread_mutex_init(&mutex,NULL);
 		pthread_cond_init(&cond,NULL);
-		printf("스레드 생성 전 %d번째\n",k);
-		for(int i=0;i<m;i++){
-			for(int j=0;j<n;j++)
-				printf("%d ",rarr[i][j]);
-			printf("\n");
-		}
+		
 
 		seqn = k;
 		it =0;
 		//runnum개의 스레드 생성
-		printf("스레드 생성\n");
+		//printf("스레드 생성\n");
 		for(int i=0;i<runnum;i++)
 		{
 			id[i] = i;
@@ -109,6 +107,12 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 		}
 		//}
 		sleep(3);
+
+		//tid[i] 입력
+		for(int i=0;i<runnum;i++){
+			resultarr[k-1][i] = (unsigned int)tid[i];
+			//printf("tid [%d][%d] = %u\n",k-1,i,resultarr[k-1][i]);
+		}
 
 
 		for(int i =0;i<m;i++)
@@ -142,14 +146,6 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 
 		fclose(fp);
 
-
-		printf("스레드 생성 후 %d번째\n",k);
-		for(int i=0;i<m;i++){
-			for(int j=0;j<n;j++)
-				printf("%d ",rarr[i][j]);
-			printf("\n");
-		}
-
 	}
 
 
@@ -177,12 +173,22 @@ void mkthr(int **arr,int repeat,int m, int n,int runnum)
 
 
 
-	printf("mutex 해제\n");
+	//printf("mutex 해제\n");
 	pthread_mutex_destroy(&mutex);
-	printf("cond 해제\n");
+	//printf("cond 해제\n");
 	pthread_cond_destroy(&cond);
 
-	printf("리턴시작\n");
+	
+
+	//스레드 id 출력
+	for(int i=0;i<repeat;i++){
+		for(int j=0;j<runnum;j++){
+			printf("%d세대  %d번째 스레드 =  %u\n",i,j,resultarr[i][j]);
+		}
+	}
+
+
+	//printf("리턴시작\n");
 	return;
 }
 
@@ -196,18 +202,9 @@ void *paral(void *arg){
 	//int it=0;
 	int arn=0;
 
-	for(int i=0;i<runn;i++){
-		printf("tid[%d] = %u\n",i,(unsigned int)tid[i]);
-	}
-	
-	
-	printf("im in paral\n");
-
-
-	printf("it = %d\n",it);
 	//it이라는 변수를 여러개의 스레드가 독립적으로 접근
 	pthread_mutex_lock(&mutex);
-	printf("lock %d\n",seqn);
+	//printf("lock %d\n",seqn);
 	if(it>=mm)
 		pthread_cond_broadcast(&cond);
 	//행 단위로 실행
@@ -231,7 +228,7 @@ void *paral(void *arg){
 			farr[it][i] = sarr[it][i];
 		it++;//위치 바꾼 후
 		pthread_mutex_unlock(&mutex);
-		printf("%u 스레드 실행\n",(unsigned int)pid);
+		//printf("%u 스레드 실행\n",(unsigned int)pid);
 
 
 		if(it<mm)
@@ -245,7 +242,7 @@ void *paral(void *arg){
 	
 	for(int i=0;i<runn;i++){
 		pthread_join(tid[i],NULL);
-		printf("스레드 반납 %d\n",i);
+		//printf("스레드 반납 %d\n",i);
 	}
 
 
@@ -257,7 +254,7 @@ void *paral(void *arg){
 
 void rowtest(int i)
 {
-	printf("im in rowtest\n");
+	//printf("im in rowtest\n");
 	int neighbor =0;
 	for(int j=0;j<nn;j++){
 		//내가 살아있는 세포일 경우
@@ -283,7 +280,7 @@ void rowtest(int i)
 }
 
 int neighborNum2(int i,int j){
-	printf("im in neighborNum2\n");
+	//printf("im in neighborNum2\n");
 	int cnt =0;
 	for(int p = i-1;p<=i+1;p++){
 		for(int q = j-1;q<=j+1;q++){
